@@ -1,5 +1,6 @@
-import {AmbientLight, AxesHelper, BoxBufferGeometry, GridHelper, Mesh, MeshStandardMaterial, PerspectiveCamera, Scene, Vector3, WebGLRenderer} from 'three';
+import {AmbientLight, AxesHelper, BoxBufferGeometry, GridHelper, Mesh, MeshStandardMaterial, MOUSE, PerspectiveCamera, Scene, Vector3, WebGLRenderer} from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 export class TEngine{
     private dom:HTMLElement
     private renderer : WebGLRenderer
@@ -49,10 +50,22 @@ export class TEngine{
         statsDom.style.right = '5px'
         statsDom.style.left = 'unset'
 
+        // 初始化orbitControls
+        const orbitControls = new OrbitControls(this.camera,this.renderer.domElement)
+        // orbitControls.autoRotate = true
+        orbitControls.enableDamping = true
+        orbitControls.mouseButtons = {
+            LEFT:undefined,
+            MIDDLE:MOUSE.DOLLY,
+            RIGHT:MOUSE.ROTATE
+        }
+
         const renderFun = ()=>{
-            box.position.x += -0.01
-            box.rotation.y += 0.001
-            this.camera.position.x += -0.01
+            box.position.x += -0.1
+            box.rotation.y += 0.01
+
+            orbitControls.update()
+
             this.renderer.render(this.scene,this.camera)
             stats.update()
             requestAnimationFrame(renderFun)
