@@ -1,4 +1,4 @@
-import {AmbientLight, AxesHelper, BoxBufferGeometry, GridHelper, Mesh, MeshStandardMaterial, MOUSE, PerspectiveCamera, Scene, Vector3, WebGLRenderer} from 'three';
+import {AmbientLight, AxesHelper, GridHelper, MOUSE, Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer} from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 export class TEngine{
@@ -22,28 +22,17 @@ export class TEngine{
 
         // 大小设定
         this.renderer.setSize(dom.offsetWidth,dom.offsetHeight,true)
-        // 创建box
-        const box = new Mesh(
-            new BoxBufferGeometry(10,10,10),
-            new MeshStandardMaterial({
-                color: 'rgb(255,0,0)'
-            })
-        )
+
         // 光
         const ambientLight = new AmbientLight('rgb(255,255,255)',1)
         // 辅助
         const axesHepler = new AxesHelper(500)
         const gridHelper = new GridHelper(500,20,'rgb(200,200,200)','rgb(100,100,100')
 
-        this.scene.add(box)
+
         this.scene.add(ambientLight)
         this.scene.add(axesHepler)
         this.scene.add(gridHelper)
-
-        // this.renderer.setClearColor('rgb(255,255,255)')
-        // this.renderer.clearColor()
-        // this.renderer.render(this.scene,this.camera)
-
         // 初始性能监视器
         const stats = Stats()
         const statsDom = stats.domElement
@@ -63,9 +52,6 @@ export class TEngine{
         }
 
         const renderFun = ()=>{
-            box.position.x += -0.1
-            box.rotation.y += 0.01
-
             orbitControls.update()
 
             this.renderer.render(this.scene,this.camera)
@@ -78,5 +64,11 @@ export class TEngine{
 
         dom.appendChild(this.renderer.domElement)
         dom.appendChild(statsDom)
+    }
+
+    addObject(...object:Object3D[]){
+        object.forEach(elem=>{
+            this.scene.add(elem)
+        })
     }
 }
